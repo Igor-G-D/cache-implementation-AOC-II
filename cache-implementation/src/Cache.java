@@ -1,6 +1,8 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Cache {
     private int nsets;
-    private int bsize;
     private int assoc;
     private String subst;
 
@@ -14,11 +16,13 @@ public class Cache {
     private int conflictMisses;
     private int accesses;
 
+    private Queue<Integer>[] fifoQueue;
+    private LinkedList<Integer>[] lruList;
+
     private boolean full;
 
     Cache(int nsets, int bsize, int assoc, String subst) {
         this.nsets = nsets;
-        this.bsize = bsize;
         this.assoc = assoc;
         this.subst = subst;
 
@@ -41,6 +45,23 @@ public class Cache {
                 cache[i][j] = -1; // initialize all positions to -1 to handle compulsory misses later
             }
         }
+
+        switch(subst) {
+            case "r": // if substitution algorithm is random
+                break; // nothing to be done
+            case "f": // if substitution algorithm is FIFO
+                fifoQueue = new LinkedList[nsets]; // initialize fifoQueue 
+                for (int i = 0; i < nsets; i++) {
+                    fifoQueue[i] = new LinkedList<>();
+                }
+                break;
+            case "l":
+                lruList = new LinkedList[nsets]; // initialize lruList 
+                for (int i = 0; i < nsets; i++) {
+                    lruList[i] = new LinkedList<>();
+                }
+                break;
+            }
     }
 
     public void accessCache(int address) { // search for address in memory
@@ -51,6 +72,15 @@ public class Cache {
 
         for(int i = 0; i < assoc;i++) {
             if(cache[index][i] == tag) { // hit
+                if(subst.compareTo("l") == 0) {
+                    int accessedIndex = lruList[index].indexOf(tag); // search if that tag was accessed before (-1 if not)
+
+                    if(accessedIndex != -1) { // if yes, remove from the list
+                        lruList[index].remove(accessedIndex);
+                    }
+
+                    lruList[index].addFirst(tag); // add to beggining of list (most recently used)
+                }
                 return;// if there is a hit, then nothing else to do
             }
         }
@@ -63,7 +93,7 @@ public class Cache {
             if(cache[index][0] == -1) {
                 compulsoryMisses++; // if its -1, means that position hasn't been accessed before
             } else {
-                conflictMisses++; // if not, it needs to be replaced
+                conflictMisses++; // if not, one position needs to be replaced
             }
             cache[index][0] = tag; // bring that address to cache in that position
             return; // nothing else to be done
@@ -73,12 +103,30 @@ public class Cache {
                     if(cache[index][i] == -1) { 
                         compulsoryMisses++;
                         cache[index][i] = tag; // bring that address to cache in that position
+
+                    switch(subst) {
+                        case "r": // if substitution algorithm is random
+                            break; // nothing to be done
+                        case "f": // if substitution algorithm is FIFO
+                            fifoQueue[index].add(tag);
+                            break;
+                        case "l":
+                            int accessedIndex = lruList[index].indexOf(tag); // search if that tag was accessed before (-1 if not)
+
+                            if(accessedIndex != -1) { // if yes, remove from the list
+                                lruList[index].remove(accessedIndex);
+                            }
+
+                            lruList[index].addFirst(tag); // add to beggining of list (most recently used)
+                            break;
+                        }
+
                         return; // nothing else to do
                     }
                 }
             }
 
-            // if code reaches here, means that it didn't find a position to be filled, needs to diferenciate between capacity and conflict
+            // if code reaches here, means that it didn't find a position to be filled, needs to diferenciate between capacity and conflict faults
             
             if(full) { // if already full, no need to redo the testing, it's already a capacity fault
                 capacityMisses++;
@@ -96,10 +144,10 @@ public class Cache {
                     randomSubst(index, tag);
                     break;
                 case "f":
-                    // TODO: FIFO substitution algorithm
+                    fifoSubst(index, tag);
                     break;
                 case "l":
-                    // TODO: LRU substitution algorithm
+                    lruSubst(index, tag);
                     break;
             }
 
@@ -118,7 +166,32 @@ public class Cache {
     }
 
     private void randomSubst(int index, int tag) {
-        int random = (int)Math.floor(Math.random() * assoc);
-        cache[index][random] = tag;
-    } 
+        int random = (int)Math.floor(Math.random() * assoc); // find a random position to replace
+        cache[index][random] = tag; // replace ir
+    }
+
+    private void fifoSubst(int index, int tag) {
+        int oldestTag = fifoQueue[index].remove(); // get the oldest added tag from the start of the queue
+
+        for(int i = 0; i < assoc; i++) { // find its location
+            if(cache[index][i] == oldestTag) {
+                cache[index][i] = tag; // replace it
+            }
+        }
+        fifoQueue[index].add(tag); // add new tag to the end of the queue
+    }
+
+    private void lruSubst(int index, int tag) {
+        int oldestTagAccessed = lruList[index].removeLast(); // get the oldest added accessed from the end of the list
+
+        for(int i = 0; i < assoc; i++) { // find its location
+            if(cache[index][i] == oldestTagAccessed) {
+                cache[index][i] = tag; // replace it
+                break;
+            }
+        }
+
+        lruList[index].addFirst(tag); // add tag as the most recently accessed in the lruList
+        
+    }
 }
