@@ -192,6 +192,22 @@ public class Cache {
         }
 
         lruList[index].addFirst(tag); // add tag as the most recently accessed in the lruList
-        
+
+    }
+
+    public void printResults(int formatFlag) {
+        double totalMissRate = (double)(compulsoryMisses + capacityMisses + conflictMisses)/accesses;
+        double compulsoryMissRate = (double)compulsoryMisses/accesses;
+        double capacityMissRate = (double)capacityMisses/accesses;
+        double conflictMissRate = (double)conflictMisses/accesses;
+        if(formatFlag == 1) {
+            System.out.printf("%d, %.2f, %.2f, %.2f, %.2f, %.2f\n", accesses, totalMissRate, compulsoryMissRate, capacityMissRate, conflictMissRate);
+        } else {
+            System.out.println("Total Accesses: " + accesses);
+            System.out.printf("Total Miss Rate: %.2f%%\n", totalMissRate*100 );
+            System.out.printf("Compulsory Miss Rate: %.2f%%\n", compulsoryMissRate*100 );
+            System.out.printf("Capacity Miss Rate: %.2f%%\n", capacityMissRate*100 );
+            System.out.printf("Conflict Miss Rate: %.2f%%\n", conflictMissRate*100 );
+        }
     }
 }
