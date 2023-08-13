@@ -7,6 +7,12 @@ public class App {
 
         Cache cache = new Cache(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), args[3]);
 
+        if(args.length != 6) {
+            System.out.println("Wrong number of arguments. Use correct format:");
+            System.out.println("java -jar CacheImplementation_Igor_Dutra_Gabriel_Rosa <nsets> <bsize> <assoc> <subst> <outputflag> filename");
+            System.exit(1);
+        }
+
         String relativePath = "./cache-implementation/addresses/" + args[5]; // Relative path to the binary file
         try (FileInputStream fileInputStream = new FileInputStream(relativePath); // if file not found
             DataInputStream dataInputStream = new DataInputStream(fileInputStream)) {
