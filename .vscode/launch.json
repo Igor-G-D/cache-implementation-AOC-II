@@ -16,7 +16,7 @@
             "request": "launch",
             "mainClass": "App",
             "projectName": "cache-implementation-AOC-II_fc3d2338",
-            "args": ["1","1","4","l","0","bin_100.bin"]
+            "args": ["128","1","4","l","0","vortex.in.sem.persons.bin"]
         }
     ]
 }

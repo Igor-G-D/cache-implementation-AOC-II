@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Queue;
 
 public class Cache {
@@ -200,14 +201,16 @@ public class Cache {
         double compulsoryMissRate = (double)compulsoryMisses/accesses;
         double capacityMissRate = (double)capacityMisses/accesses;
         double conflictMissRate = (double)conflictMisses/accesses;
+        double hitRate = 1 - totalMissRate;
         if(formatFlag == 1) {
-            System.out.printf("%d, %.2f, %.2f, %.2f, %.2f, %.2f\n", accesses, totalMissRate, compulsoryMissRate, capacityMissRate, conflictMissRate);
+            System.out.printf(Locale.US,"%d, %.2f, %.2f, %.2f, %.2f, %.2f\n", accesses, hitRate, totalMissRate, compulsoryMissRate, capacityMissRate, conflictMissRate);
         } else {
             System.out.println("Total Accesses: " + accesses);
-            System.out.printf("Total Miss Rate: %.2f%%\n", totalMissRate*100 );
-            System.out.printf("Compulsory Miss Rate: %.2f%%\n", compulsoryMissRate*100 );
-            System.out.printf("Capacity Miss Rate: %.2f%%\n", capacityMissRate*100 );
-            System.out.printf("Conflict Miss Rate: %.2f%%\n", conflictMissRate*100 );
+            System.out.printf(Locale.US,"Hit Rate: %.2f%%\n", hitRate*100 );
+            System.out.printf(Locale.US,"Total Miss Rate: %.2f%%\n", totalMissRate*100 );
+            System.out.printf(Locale.US,"Compulsory Miss Rate: %.2f%%\n", compulsoryMissRate*100 );
+            System.out.printf(Locale.US,"Capacity Miss Rate: %.2f%%\n", capacityMissRate*100 );
+            System.out.printf(Locale.US,"Conflict Miss Rate: %.2f%%\n", conflictMissRate*100 );
         }
     }
 }
