@@ -5,6 +5,7 @@ import java.util.Queue;
 public class Cache {
     private int nsets;
     private int assoc;
+    private int bsize;
     private String subst;
 
     int indexBits;
@@ -12,18 +13,20 @@ public class Cache {
     int tagBits;
 
     private int cache[][];
+    private boolean validBit[][];
     private int compulsoryMisses;
     private int capacityMisses;
     private int conflictMisses;
     private int accesses;
+    private final int numberOfPositions;
+    private int positionsFilled;
 
     private Queue<Integer>[] fifoQueue;
     private LinkedList<Integer>[] lruList;
 
-    private boolean full;
-
     Cache(int nsets, int bsize, int assoc, String subst) {
         this.nsets = nsets;
+        this.bsize = bsize;
         this.assoc = assoc;
         this.subst = subst;
 
@@ -32,7 +35,11 @@ public class Cache {
         conflictMisses = 0;
         accesses = 0;
 
-        this.cache = new int[nsets][assoc];
+        numberOfPositions = nsets*assoc;
+        positionsFilled = 0;
+
+        this.cache = new int[nsets][assoc]; // default value = 0
+        this.validBit = new boolean[nsets][assoc]; // default value = false;
 
         double indexDouble = Math.log(nsets) / Math.log(2); // log base 2 of nsets
         double offsetDouble = Math.log(bsize) / Math.log(2); // log base 2 of nsets
@@ -40,12 +47,6 @@ public class Cache {
         indexBits = (int) indexDouble; // converting to integer since it's always going to be a natural number
         offsetBits = (int) offsetDouble; // converting to integer since it's always going to be a natural numbe
         tagBits = 32-indexBits-offsetBits;
-
-        for(int i = 0; i < nsets; i ++) {
-            for(int j = 0; j < assoc; j ++) {
-                cache[i][j] = -1; // initialize all positions to -1 to handle compulsory misses later
-            }
-        }
 
         switch(subst) {
             case "r": // if substitution algorithm is random
@@ -72,7 +73,7 @@ public class Cache {
 
 
         for(int i = 0; i < assoc;i++) {
-            if(cache[index][i] == tag) { // hit
+            if(cache[index][i] == tag && validBit[index][i] == true) { // hit
                 if(subst.compareTo("l") == 0) {
                     int accessedIndex = lruList[index].indexOf(tag); // search if that tag was accessed before (-1 if not)
 
@@ -91,20 +92,23 @@ public class Cache {
 
     private void treatFault(int index, int tag) {
         if(assoc == 1) { // directly mapped cache
-            if(cache[index][0] == -1) {
-                compulsoryMisses++; // if its -1, means that position hasn't been accessed before
+            if(validBit[index][0] == false) {
+                compulsoryMisses++; // if its false, means that position hasn't been accessed before
+                validBit[index][0] = true; // validBit = 1 since the position was just accessed
+                positionsFilled++;
             } else {
                 conflictMisses++; // if not, one position needs to be replaced
             }
             cache[index][0] = tag; // bring that address to cache in that position
             return; // nothing else to be done
         } else {
-            if(!full) { // if the cache is full, there can't be any more compulsory misses
+            if(!(positionsFilled == numberOfPositions)) { // if the cache is full, there can't be any more compulsory misses
                 for(int i = 0; i < assoc; i ++) { // check if that index has a position to be filled
-                    if(cache[index][i] == -1) { 
+                    if(validBit[index][i] == false) { 
                         compulsoryMisses++;
                         cache[index][i] = tag; // bring that address to cache in that position
-
+                        validBit[index][i] = true; // validBit = 1 since the position was just accessed
+                        positionsFilled++;
                     switch(subst) {
                         case "r": // if substitution algorithm is random
                             break; // nothing to be done
@@ -129,15 +133,10 @@ public class Cache {
 
             // if code reaches here, means that it didn't find a position to be filled, needs to diferenciate between capacity and conflict faults
             
-            if(full) { // if already full, no need to redo the testing, it's already a capacity fault
+            if(positionsFilled == numberOfPositions) { // if true, means the cache is full
                 capacityMisses++;
             } else {
-                full = testFull(); //redo the test since it may have changed
-                if(full) {
-                    capacityMisses++;
-                } else {
-                    conflictMisses++;
-                }
+                conflictMisses++;
             }
 
             switch(subst) {
@@ -153,17 +152,6 @@ public class Cache {
             }
 
         }
-    }
-
-    private boolean testFull() { // test if the cache is full
-        for(int i = 0; i < nsets; i ++) {
-            for(int j = 0; j < assoc; j ++) {
-                if(cache[i][j] == -1) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     private void randomSubst(int index, int tag) {
@@ -205,6 +193,11 @@ public class Cache {
         if(formatFlag == 1) {
             System.out.printf(Locale.US,"%d, %.2f, %.2f, %.2f, %.2f, %.2f\n", accesses, hitRate, totalMissRate, compulsoryMissRate, capacityMissRate, conflictMissRate);
         } else {
+            System.out.println("Number of sets: " + nsets);
+            System.out.println("Associativity: " + assoc);
+            System.out.println("Block size: " + bsize);
+            System.out.println("Substitution Algorithm: " + subst);
+
             System.out.println("Total Accesses: " + accesses);
             System.out.printf(Locale.US,"Hit Rate: %.2f%%\n", hitRate*100 );
             System.out.printf(Locale.US,"Total Miss Rate: %.2f%%\n", totalMissRate*100 );

@@ -9,21 +9,15 @@
             "name": "App",
             "request": "launch",
             "mainClass": "App",
-            "projectName": "cache-implementation-AOC-II_f7314138",
+            "projectName": "cache-implementation-AOC-II_fc3d2338",
             "args": [
                 "256",
                 "4",
                 "1",
                 "r",
-                "1",
+                "0",
                 "bin_100.bin"
             ]
-        },
-        {
-            "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}"
         }
     ]
 }
