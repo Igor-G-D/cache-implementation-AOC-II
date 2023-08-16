@@ -198,9 +198,9 @@ public class Cache {
 
     public void printResults(int formatFlag) {
         double totalMissRate = (double)(compulsoryMisses + capacityMisses + conflictMisses)/accesses;
-        double compulsoryMissRate = (double)compulsoryMisses/accesses;
-        double capacityMissRate = (double)capacityMisses/accesses;
-        double conflictMissRate = (double)conflictMisses/accesses;
+        double compulsoryMissRate = (double)compulsoryMisses/(compulsoryMisses + capacityMisses + conflictMisses);
+        double capacityMissRate = (double)capacityMisses/(compulsoryMisses + capacityMisses + conflictMisses);
+        double conflictMissRate = (double)conflictMisses/(compulsoryMisses + capacityMisses + conflictMisses);
         double hitRate = 1 - totalMissRate;
         if(formatFlag == 1) {
             System.out.printf(Locale.US,"%d, %.2f, %.2f, %.2f, %.2f, %.2f\n", accesses, hitRate, totalMissRate, compulsoryMissRate, capacityMissRate, conflictMissRate);
