@@ -6,17 +6,24 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
             "name": "App",
             "request": "launch",
             "mainClass": "App",
-            "projectName": "cache-implementation-AOC-II_fc3d2338",
-            "args": ["256","4","1","r","1","bin_100.bin"]
+            "projectName": "cache-implementation-AOC-II_f7314138",
+            "args": [
+                "256",
+                "4",
+                "1",
+                "r",
+                "1",
+                "bin_100.bin"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
         }
     ]
 }
