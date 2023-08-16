@@ -210,7 +210,7 @@ public class Cache {
             System.out.printf(Locale.US,"Total Miss Rate: %.2f%%\n", totalMissRate*100 );
             System.out.printf(Locale.US,"Compulsory Miss Rate: %.2f%%\n", compulsoryMissRate*100 );
             System.out.printf(Locale.US,"Capacity Miss Rate: %.2f%%\n", capacityMissRate*100 );
-            System.out.printf(Locale.US,"Conflict Misses Rate: %.2f%%\n", conflictMissRate*100 );
+            System.out.printf(Locale.US,"Conflict Miss Rate: %.2f%%\n", conflictMissRate*100 );
         }
     }
 }
