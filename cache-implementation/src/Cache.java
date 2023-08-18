@@ -66,7 +66,7 @@ public class Cache {
             }
     }
 
-    public void accessCache(int address) { // search for address in memory
+    public boolean accessCache(int address) { // search for address in memory
         accesses++;
         int tag = address >> (offsetBits + indexBits);
         int index = (address >> offsetBits) & ((1 << indexBits) - 1); //  AND with bitmask to get the index from the address
@@ -83,11 +83,12 @@ public class Cache {
 
                     lruList[index].addFirst(tag); // add to beggining of list (most recently used)
                 }
-                return;// if there is a hit, then nothing else to do
+                return true;// if there is a hit, then nothing else to do
             }
         }
         // if it reaches this part of the code, there is a miss
         treatFault(index, tag);
+        return false;
     }
 
     private void treatFault(int index, int tag) {
