@@ -5,7 +5,7 @@ import java.io.IOException;
 public class App {
     public static void main(String[] args) throws Exception { // <nsets> <bsize> <assoc> <subst> <outputflag> <file> OR <nsetsl1> <bsizel1> <assocl1> <substl1> <file> <nsetsl2> <bsizel2> <assocl2> <substl2>
 
-        if(!(args.length == 6 || args.length == 10)) { // if number of arguments isn't equal to 6 or 9
+        if(!(args.length == 6 || args.length == 10)) { // if number of arguments isn't equal to 6 or 10
             System.out.println("Wrong number of arguments. Use correct format:");
             System.out.println("java -jar CacheImplementation_Igor_Dutra_Gabriel_Rosa <nsets> <bsize> <assoc> <subst> <outputflag> filename");
             System.out.println("java -jar CacheImplementation_Igor_Dutra_Gabriel_Rosa <nsetsl1> <bsizel1> <assocl1> <substl1> <outputflag> filename <nsetsl2> <bsizel2> <assocl2> <substl2>");
