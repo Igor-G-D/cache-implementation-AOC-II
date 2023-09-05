@@ -75,7 +75,7 @@ public class Cache {
         for(int i = 0; i < assoc;i++) {
             if(cache[index][i] == tag && validBit[index][i] == true) { // hit
                 if(subst.compareTo("l") == 0) {
-                    int accessedIndex = lruList[index].indexOf(tag); // search if that tag was accessed before (-1 if not)
+                    int accessedIndex = lruList[index].indexOf(tag); // search if that tag was accessed before
 
                     if(accessedIndex != -1) { // if yes, remove from the list
                         lruList[index].remove(accessedIndex);
