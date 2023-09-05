@@ -11,8 +11,7 @@
             "mainClass": "App",
             "projectName": "cache-implementation-AOC-II_fc3d2338",
             "args": [
-                "256","4","1","r",
-                "0", "bin_100.bin"
+                "1", "4", "32", "R", "0", "vortex.in.sem.persons.bin"
             ]
         }
     ]

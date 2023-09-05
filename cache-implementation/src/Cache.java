@@ -48,7 +48,7 @@ public class Cache {
         offsetBits = (int) offsetDouble; // converting to integer since it's always going to be a natural numbe
         tagBits = 32-indexBits-offsetBits;
 
-        switch(subst) {
+        switch(subst.toLowerCase()) {
             case "r": // if substitution algorithm is random
                 break; // nothing to be done
             case "f": // if substitution algorithm is FIFO
@@ -110,7 +110,7 @@ public class Cache {
                         cache[index][i] = tag; // bring that address to cache in that position
                         validBit[index][i] = true; // validBit = 1 since the position was just accessed
                         positionsFilled++;
-                    switch(subst) {
+                    switch(subst.toLowerCase()) {
                         case "r": // if substitution algorithm is random
                             break; // nothing to be done
                         case "f": // if substitution algorithm is FIFO
@@ -140,7 +140,7 @@ public class Cache {
                 conflictMisses++;
             }
 
-            switch(subst) {
+            switch(subst.toLowerCase()) {
                 case "r":
                     randomSubst(index, tag);
                     break;
@@ -192,7 +192,7 @@ public class Cache {
         double conflictMissRate = (double)conflictMisses/(compulsoryMisses + capacityMisses + conflictMisses);
         double hitRate = 1 - totalMissRate;
         if(formatFlag == 1) {
-            System.out.printf(Locale.US,"%d, %.2f, %.2f, %.2f, %.2f, %.2f\n", accesses, hitRate, totalMissRate, compulsoryMissRate, capacityMissRate, conflictMissRate);
+            System.out.printf(Locale.US,"%d, %.4f, %.4f, %.2f, %.2f, %.2f\n", accesses, hitRate, totalMissRate, compulsoryMissRate, capacityMissRate, conflictMissRate);
         } else {
             System.out.println("Number of sets: " + nsets);
             System.out.println("Associativity: " + assoc);
@@ -200,11 +200,11 @@ public class Cache {
             System.out.println("Substitution Algorithm: " + subst);
 
             System.out.println("Total Accesses: " + accesses);
-            System.out.printf(Locale.US,"Hit Rate: %.2f%%\n", hitRate*100 );
-            System.out.printf(Locale.US,"Total Miss Rate: %.2f%%\n", totalMissRate*100 );
-            System.out.printf(Locale.US,"Compulsory Miss Rate: %.2f%%\n", compulsoryMissRate*100 );
-            System.out.printf(Locale.US,"Capacity Miss Rate: %.2f%%\n", capacityMissRate*100 );
-            System.out.printf(Locale.US,"Conflict Miss Rate: %.2f%%\n", conflictMissRate*100 );
+            System.out.printf(Locale.US,"Hit Rate: %.4f%%\n", hitRate*100 );
+            System.out.printf(Locale.US,"Total Miss Rate: %.4f%%\n", totalMissRate*100 );
+            System.out.printf(Locale.US,"Compulsory Miss Rate: %.4f%%\n", compulsoryMissRate*100 );
+            System.out.printf(Locale.US,"Capacity Miss Rate: %.4f%%\n", capacityMissRate*100 );
+            System.out.printf(Locale.US,"Conflict Miss Rate: %.4f%%\n", conflictMissRate*100 );
         }
     }
 }
