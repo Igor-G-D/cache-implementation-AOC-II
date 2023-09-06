@@ -20,7 +20,7 @@ public class App {
             cache = new CacheL2(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), args[3], Integer.parseInt(args[6]), Integer.parseInt(args[7]), Integer.parseInt(args[8]), args[9]);
         }
 
-        String relativePath = "./cache-implementation/addresses/" + args[5]; // Relative path to the binary file
+        String relativePath = args[5]; // Relative path to the binary file
         try (FileInputStream fileInputStream = new FileInputStream(relativePath); // if file not found
             DataInputStream dataInputStream = new DataInputStream(fileInputStream)) {
 
